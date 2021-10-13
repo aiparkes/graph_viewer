@@ -6,6 +6,7 @@ from plotly.subplots import make_subplots
 from layout import _max_width_
 _max_width_()
 
+
 ref = pd.DataFrame(columns=['A','B','Reference line','D','E'])
 yearly_decrease = {2021:2,2022:3,2023:5,2024:7,2025:9,2026:11,2027:14,2028:17,2029:20,2030:23}
 bulk_ref_line = lambda DWT : 4745*(DWT**-0.622)
@@ -14,9 +15,12 @@ colours = {'E':'red','D':'orange','Reference line':'black','B':'lightgreen','A':
 
 col1, col2, col3 = st.columns([0.75,0.125,0.125])
 
+vessel_type = col2.selectbox('Vessel Type',('Bulk Carrier',''))
 input_AER = col2.number_input('Input AER', value=1.5)
 input_DWT = col2.number_input('Input Deadweight', value=260000)
 
+if input_DWT > 279000:
+    input_DWT = 279000
 ref['Reference line'] = [bulk_ref_line(input_DWT)*(1-perc/100) for perc in yearly_decrease.values()]
 ref['A'] = ref['Reference line']*boundaries['A']
 ref['B'] = ref['Reference line']*boundaries['B']
@@ -80,7 +84,6 @@ fig['layout']['yaxis']['visible']=True
 fig['layout']['xaxis']['showticklabels']=True
 fig['layout']['yaxis2']['visible']=False
 fig['layout']['xaxis2']['visible']=False
-
 
 fig.update_layout(
 	title_text = 'CII tool',
