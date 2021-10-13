@@ -19,7 +19,7 @@ col1, col2, col3 = st.columns([0.75,0.125,0.125])
 vessel_type = col2.selectbox('Vessel Type',('Bulk Carrier',''))
 input_AER = col2.number_input('Input AER', value=1.5)
 input_DWT = col2.number_input('Input Deadweight', value=260000)
-perc_decr = col2.number_input('Percentage Decrease Post 2026', value=3.0, format="%.1f")
+perc_decr = col2.number_input('Percentage Decrease Post 2026', value=3.0)
 
 yearly_decrease = {2021:2,2022:3,2023:5,2024:7,2025:9,2026:11,2027:11+perc_decr,2028:11+perc_decr*2,2029:11+perc_decr*3,2030:11+perc_decr*4}
 
