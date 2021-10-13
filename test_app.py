@@ -1,20 +1,23 @@
 import pandas as pd
 import streamlit as st
 import numpy as np
+from datetime import date
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from layout import _max_width_
 _max_width_()
 
-st.header('CII Tool (Bulk Carrier Prototype)')
 
 ref = pd.DataFrame(columns=['A','B','Reference line','D','E'])
-
 bulk_ref_line = lambda DWT : 4745*(DWT**-0.622)
 boundaries = {'A':0.86,'B':0.94,'D':1.06,'E':1.18}
 colours = {'E':'red','D':'orange','Reference line':'black','B':'lightgreen','A':'darkgreen'}
 
-col1, col2, col3 = st.columns([0.75,0.125,0.125])
+col1, col2, col3 = st.columns([0.8,0.15,0.05])
+ship_name = col2.text_input('Vessel Name', 'Vessel Name')
+imo_num = col2.text_input('IMO Number', 'IMO Number')
+col1.header(ship_name+' IMO '+imo_num+': CII Tool (Bulk Carrier Prototype)')
+col1.write('2020 AER Plot as of '+date.today().strftime('%A %d %B %Y'))
 
 vessel_type = col2.selectbox('Vessel Type',('Bulk Carrier',''))
 input_AER = col2.number_input('Input AER', value=1.5)
@@ -94,15 +97,62 @@ fig['layout']['xaxis2']['visible']=False
 fig.update_layout(
 	showlegend = True,
 	width=1100,
-	height=500,
-    hovermode="x unified"
+	height=400,
+    hovermode="x unified",
+    margin=dict(l=10, r=10, t=10, b=10)
 	)
 
 col1.plotly_chart(fig, use_container_width = True)
 
 
-col11, col12, col13 = st.columns([0.1,0.5,0.4])
+col1, col2, col3, col4, col5, col6 = st.columns([0.1,0.5,0.05,0.15,0.05, 0.1])
 
-col12.dataframe(ref[['Percentage Decrease','A','B','Reference line','D','E']].transpose().style.format("{:.4}"))
+col2.dataframe(ref[['Percentage Decrease','A','B','Reference line','D','E']].transpose().style.format("{:.4}"))
 #yearly_decrease = pd.DataFrame({2021:[2],2022:[3],2023:[5],2024:[7],2025:[9],2026:[11],2027:[11+perc_decr],2028:[11+perc_decr*2],2029:[11+perc_decr*3],2030:[11+perc_decr*4]})
 #col13.write(yearly_decrease)
+col3.text('')
+col4.text('')
+col5.text('')
+col6.text('')
+col3.text('')
+col4.text('')
+col5.text('')
+col6.text('')
+col3.text('')
+col4.text('')
+col5.text('')
+col6.text('')
+col3.text('')
+col4.text('')
+col5.text('')
+col6.text('')
+col3.text('')
+col4.text('')
+col5.text('')
+col6.text('')
+col3.text('')
+col4.text('')
+col5.text('')
+col6.text('')
+col3.text('')
+col4.text('')
+col5.text('')
+col6.text('')
+col3.text('')
+col4.text('')
+col5.text('')
+col6.text('')
+col3.text('')
+col4.text('')
+col5.text('')
+col6.text('')
+col3.text('')
+col4.text('')
+col5.text('')
+col6.text('')
+col3.text('')
+col4.text('')
+col3.write('Made for ')
+col4.image('oldendorff.png', width=200)
+col5.write('Powered by ')
+col6.image('arcsilea.png')
