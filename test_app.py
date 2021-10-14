@@ -13,12 +13,16 @@ bulk_ref_line = lambda DWT : 4745*(DWT**-0.622)
 boundaries = {'A':0.86,'B':0.94,'D':1.06,'E':1.18}
 colours = {'E':'red','D':'orange','Reference line':'black','B':'lightgreen','A':'darkgreen'}
 
+#col1, col2, col3, col4 = st.columns([0.6,0.2,0.15,0.05])
 col1, col2, col3 = st.columns([0.8,0.15,0.05])
-ship_name = col2.text_input('Vessel Name', 'Name')
-imo_num = col2.text_input('IMO Number', 'Number')
+col2.image('oldendorff.png', width=200)
+ship_name = col2.text_input('Vessel Name', '')
+imo_num = col2.text_input('IMO Number', '')
+
 col1.header(ship_name+' IMO '+imo_num+': CII Tool (Bulk Carrier Prototype)')
 col1.write('2020 AER Plot as of '+date.today().strftime('%A %d %B %Y'))
 
+col1, col2, col3 = st.columns([0.8,0.15,0.05])
 vessel_type = col2.selectbox('Vessel Type',('Bulk Carrier',''))
 input_AER = col2.number_input('Input AER', value=1.5)
 input_DWT = col2.number_input('Input Deadweight', value=260000)
@@ -107,18 +111,14 @@ col1.plotly_chart(fig, use_container_width = True)
 
 col1, col2, col3, col4, col5, col6 = st.columns([0.1,0.5,0.05,0.15,0.06, 0.09])
 
-table = ref.style.format({
-                            'Percentage Decrease': '{:,.2%}'.format,
-                            'A': '{:.4}'.format,
-                            'B': '{:.4}'.format,
-                            'Reference line': '{:.4}'.format,
-                            'D': '{:.4}'.format,
-                            'E': '{:.4}'.format
-                        })
 
-col2.dataframe(ref[['Percentage Decrease','A','B','Reference line','D','E']].transpose().style.format('{:.4}'))#table)
-#yearly_decrease = pd.DataFrame({2021:[2],2022:[3],2023:[5],2024:[7],2025:[9],2026:[11],2027:[11+perc_decr],2028:[11+perc_decr*2],2029:[11+perc_decr*3],2030:[11+perc_decr*4]})
-#col13.write(yearly_decrease)
+ref = ref.round({'Percentage Decrease':0,'A':3,'B':3,'Reference line':3,'D':3,'E':3})
+ref['Percentage Decrease'] = ref['Percentage Decrease'].astype(str)
+ref['perc'] = '%'
+ref['Percentage Decrease'] = ref['Percentage Decrease']+ref.perc
+ref = ref.astype(str)
+col2.dataframe(ref[['Percentage Decrease','A','B','Reference line','D','E']].transpose())
+
 col3.text('')
 col4.text('')
 col5.text('')
@@ -162,7 +162,5 @@ col6.text('')
 col3.text('')
 col4.text('')
 col5.text('')
-col3.write('Made for ')
-col4.image('oldendorff.png', width=200)
 col5.write('Powered by ')
 col6.image('arcsilea.png')
