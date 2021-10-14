@@ -116,7 +116,7 @@ table = ref.style.format({
                             'E': '{:.4}'.format
                         })
 
-col2.dataframe(table)
+col2.dataframe(ref[['Percentage Decrease','A','B','Reference line','D','E']].transpose().style.format('{:.4}'))#table)
 #yearly_decrease = pd.DataFrame({2021:[2],2022:[3],2023:[5],2024:[7],2025:[9],2026:[11],2027:[11+perc_decr],2028:[11+perc_decr*2],2029:[11+perc_decr*3],2030:[11+perc_decr*4]})
 #col13.write(yearly_decrease)
 col3.text('')
