@@ -4,121 +4,42 @@ import numpy as np
 from datetime import date
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-from layout import _max_width_
+from custom_components.layout import _max_width_
+from rating_boundary_funcs import derive_boundaries, tidy_for_print
+from illustration import plot_boundaries_and_K
 _max_width_()
 
-
-ref = pd.DataFrame(columns=['A','B','Reference line','D','E'])
-bulk_ref_line = lambda DWT : 4745*(DWT**-0.622)
-boundaries = {'A':0.86,'B':0.94,'D':1.06,'E':1.18}
-colours = {'E':'red','D':'orange','Reference line':'black','B':'lightgreen','A':'darkgreen'}
-
-#col1, col2, col3, col4 = st.columns([0.6,0.2,0.15,0.05])
+##title including interactive vessel name and IMO number user inputs
 col1, col2, col3 = st.columns([0.8,0.15,0.05])
-col2.image('oldendorff.png', width=200)
+col2.image('illustration_resources/oldendorff.png', width=200)
+##user input
 ship_name = col2.text_input('Vessel Name', '')
 imo_num = col2.text_input('IMO Number', '')
-
+##title
 col1.header(ship_name+' IMO '+imo_num+': CII Tool (Bulk Carrier Prototype)')
 col1.write('2020 AER Plot as of '+date.today().strftime('%A %d %B %Y'))
 
+##all other user input
 col1, col2, col3 = st.columns([0.8,0.15,0.05])
 vessel_type = col2.selectbox('Vessel Type',('Bulk Carrier',''))
+input_DWT = col2.number_input('Vessel Deadweight', value=260000)
 input_AER = col2.number_input('Input AER', value=1.5)
-input_DWT = col2.number_input('Input Deadweight', value=260000)
 perc_decr = col2.number_input('Percentage Decrease Post 2026', value=3.0, format="%.1f", step=0.1)
 
-yearly_decrease = {2021:2,2022:3,2023:5,2024:7,2025:9,2026:11,2027:11+perc_decr,2028:11+perc_decr*2,2029:11+perc_decr*3,2030:11+perc_decr*4}
+##derive rating boundaries and colours/ratings of input
+reference_lines = derive_boundaries(perc_decr, input_DWT, input_AER, vessel_type)
 
-
-if input_DWT > 279000:
-    input_DWT = 279000
-ref['Percentage Decrease'] = yearly_decrease.values()
-ref['Reference line'] = [bulk_ref_line(input_DWT)*(1-perc/100) for perc in yearly_decrease.values()]
-ref['A'] = ref['Reference line']*boundaries['A']
-ref['B'] = ref['Reference line']*boundaries['B']
-ref['D'] = ref['Reference line']*boundaries['D']
-ref['E'] = ref['Reference line']*boundaries['E']
-ref['input'] = np.repeat(input_AER,len(ref.index))
-ref['year'] = yearly_decrease.keys()
-ref['colour'] = None
-ref['rating'] = None
-ref.at[ref[ref.input < ref.A].index, 'colour'] = 'darkgreen'
-ref.at[ref[(ref.input > ref.A)&(ref.input < ref.B)].index, 'colour'] = 'lightgreen'
-ref.at[ref[(ref.input > ref.B)&(ref.input < ref.D)].index, 'colour'] = 'yellow'
-ref.at[ref[(ref.input > ref.D)&(ref.input < ref.E)].index, 'colour'] = 'orange'
-ref.at[ref[(ref.input > ref.E)].index, 'colour'] = 'red'
-ref.at[ref[ref.input < ref.A].index, 'rating'] = 'A'
-ref.at[ref[(ref.input > ref.A)&(ref.input < ref.B)].index,  'rating'] = 'B'
-ref.at[ref[(ref.input > ref.B)&(ref.input < ref.D)].index,  'rating'] = 'C'
-ref.at[ref[(ref.input > ref.D)&(ref.input < ref.E)].index,  'rating'] = 'D'
-ref.at[ref[(ref.input > ref.E)].index,  'rating'] = 'E'
-ref['bar'] = np.repeat(1,len(ref.index))
-ref = ref.set_index('year')
-
-fig = make_subplots(rows=2, cols=1, row_heights=[0.9,0.1], shared_xaxes=True)
-
-fig.add_trace(go.Bar(x=ref.index,
-                    y=ref.bar,
-                    text=ref.rating,
-                    textposition='auto',
-                    marker_color=ref.colour,
-                    showlegend=False),
-                row=2,col=1)
-
-for col in ['A','B','Reference line','D','E']:
-    if col == 'Reference line':
-        fig.add_trace(go.Scatter(x=ref.index,
-                                y=ref[col],
-                                line=dict(color=colours[col], dash='dash'),
-                                name=col),
-                    row=1,col=1)
-    else:
-        fig.add_trace(go.Scatter(x=ref.index,
-                                y=ref[col],
-                                line=dict(color=colours[col]),
-                                name=col),
-                    row=1,col=1)
-
-fig.add_trace(go.Scatter(x=ref.index,
-                        y=ref.input,
-                        mode='markers',
-                        marker_symbol='x',
-                        marker_size=10,
-                        marker=dict(color='purple'),
-                        name='Input AER'),
-            row=1,col=1)
-
-fig['layout']['xaxis2']['title']=None
-fig['layout']['xaxis']['title']='Year'
-fig['layout']['yaxis2']['title']=None
-fig['layout']['yaxis']['title']='AER'
-fig['layout']['yaxis']['visible']=True
-fig['layout']['xaxis']['showticklabels']=True
-fig['layout']['yaxis2']['visible']=False
-fig['layout']['xaxis2']['visible']=False
-
-fig.update_layout(
-	showlegend = True,
-	width=1100,
-	height=400,
-    hovermode="x unified",
-    margin=dict(l=10, r=10, t=10, b=10)
-	)
-
+#plot figures
+fig = plot_boundaries_and_K(reference_lines)
 col1.plotly_chart(fig, use_container_width = True)
 
-
+##print data from reference lines
 col1, col2, col3, col4, col5, col6 = st.columns([0.1,0.5,0.05,0.15,0.06, 0.09])
+reference_lines = tidy_for_print(reference_lines)
+col2.dataframe(reference_lines[['Percentage Decrease','A','B','Reference line','D','E']].transpose())
 
 
-ref = ref.round({'Percentage Decrease':0,'A':3,'B':3,'Reference line':3,'D':3,'E':3})
-ref['Percentage Decrease'] = ref['Percentage Decrease'].astype(str)
-ref['perc'] = '%'
-ref['Percentage Decrease'] = ref['Percentage Decrease']+ref.perc
-ref = ref.astype(str)
-col2.dataframe(ref[['Percentage Decrease','A','B','Reference line','D','E']].transpose())
-
+##white space for locating logo at bottom of table
 col3.text('')
 col4.text('')
 col5.text('')
@@ -163,4 +84,4 @@ col3.text('')
 col4.text('')
 col5.text('')
 col5.write('Powered by ')
-col6.image('arcsilea.png')
+col6.image('illustration_resources/arcsilea.png')
