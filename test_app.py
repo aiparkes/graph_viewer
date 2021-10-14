@@ -107,7 +107,16 @@ col1.plotly_chart(fig, use_container_width = True)
 
 col1, col2, col3, col4, col5, col6 = st.columns([0.1,0.5,0.05,0.15,0.06, 0.09])
 
-col2.dataframe(ref[['Percentage Decrease','A','B','Reference line','D','E']].transpose().style.format("{:.4}"))
+table = ref.style.format({
+                            'Percentage Decrease': '{:,.2%}'.format,
+                            'A': '{:.4}'.format,
+                            'B': '{:.4}'.format,
+                            'Reference line': '{:.4}'.format,
+                            'D': '{:.4}'.format,
+                            'E': '{:.4}'.format
+                        })
+
+col2.dataframe(table)
 #yearly_decrease = pd.DataFrame({2021:[2],2022:[3],2023:[5],2024:[7],2025:[9],2026:[11],2027:[11+perc_decr],2028:[11+perc_decr*2],2029:[11+perc_decr*3],2030:[11+perc_decr*4]})
 #col13.write(yearly_decrease)
 col3.text('')
