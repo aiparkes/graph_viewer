@@ -29,8 +29,8 @@ st.markdown(hide_menu_style, unsafe_allow_html=True)
 sidebarTitleTop= '<p style="font-weight: 700; color:#146EA6; font-size: 24px;">Vessel Information</p>'
 st.sidebar.markdown(sidebarTitleTop, unsafe_allow_html=True)
 
-ship_name = st.sidebar.text_input('Vessel Name', 'E**** Oldendorff ')
-imo_num = st.sidebar.text_input('IMO Number', '9******')
+ship_name = st.sidebar.text_input('Vessel Name', 'Anonymous Oldendorff ')
+imo_num = st.sidebar.text_input('IMO Number', '1234567')
 vessel_type = st.sidebar.selectbox('Vessel Type',('Bulk Carrier',''))
 
 ##decorative line
@@ -70,8 +70,6 @@ st.plotly_chart(fig, use_container_width = True)
 ##print data from reference lines
 col1, col2, col3, col4, col5, col6 = st.columns([0.1,0.5,0.05,0.15,0.06, 0.09])
 reference_lines = tidy_for_print(reference_lines)
-
-
 idx = pd.IndexSlice
 df = reference_lines[['E','D','Reference line','B','A','Percentage Decrease']].transpose()
 slice_E = idx['E',:]
