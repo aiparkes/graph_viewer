@@ -29,8 +29,8 @@ st.markdown(hide_menu_style, unsafe_allow_html=True)
 sidebarTitleTop= '<p style="font-weight: 700; color:#146EA6; font-size: 24px;">Vessel Information</p>'
 st.sidebar.markdown(sidebarTitleTop, unsafe_allow_html=True)
 
-ship_name = st.sidebar.text_input('Vessel Name', 'Eckert Oldendorff ')
-imo_num = st.sidebar.text_input('IMO Number', '9676591')
+ship_name = st.sidebar.text_input('Vessel Name', 'E**** Oldendorff ')
+imo_num = st.sidebar.text_input('IMO Number', '9******')
 vessel_type = st.sidebar.selectbox('Vessel Type',('Bulk Carrier',''))
 
 ##decorative line
