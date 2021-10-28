@@ -13,11 +13,11 @@ def rate_input(ref):
 
 def colour_input(ref):
     ref['colour'] = None
-    ref.at[ref[ref.input < ref.A].index, 'colour'] = 'darkgreen'
-    ref.at[ref[(ref.input > ref.A)&(ref.input < ref.B)].index, 'colour'] = 'lightgreen'
-    ref.at[ref[(ref.input > ref.B)&(ref.input < ref.D)].index, 'colour'] = 'yellow'
-    ref.at[ref[(ref.input > ref.D)&(ref.input < ref.E)].index, 'colour'] = 'orange'
-    ref.at[ref[(ref.input > ref.E)].index, 'colour'] = 'red'
+    ref.at[ref[ref.input < ref.A].index, 'colour'] = '#72AE59'
+    ref.at[ref[(ref.input > ref.A)&(ref.input < ref.B)].index, 'colour'] = '#B0CB5C'
+    ref.at[ref[(ref.input > ref.B)&(ref.input < ref.D)].index, 'colour'] = '#DCE47C'
+    ref.at[ref[(ref.input > ref.D)&(ref.input < ref.E)].index, 'colour'] = '#F6CA96'
+    ref.at[ref[(ref.input > ref.E)].index, 'colour'] = '#F4B2A9'
     return ref
 
 def derive_rating_bounds(ref):
