@@ -200,7 +200,7 @@ def plot_layout(fig):
 
     fig.update_layout(
     	showlegend = True,
-    	width=1100,
+    	width=1000,
     	height=400,
         hovermode=False,
         margin=dict(l=10, r=10, t=10, b=10)

@@ -63,12 +63,12 @@ st.write('2020 AER Plot as of '+date.today().strftime('%A %d %B %Y'))
 ##derive rating boundaries and colours/ratings of input
 reference_lines = derive_boundaries(perc_decr, input_DWT, input_AER, vessel_type)
 
+col1, col2, col3, col4 = st.columns([0.05,0.7,0.1,0.15])
 #plot figures
 fig = plot_boundaries_and_K(reference_lines)
-st.plotly_chart(fig, use_container_width = True)
-
+col2.plotly_chart(fig)#, use_container_width = True)
+col1, col2, col3, col4 = st.columns([0.02,0.7,0.13,0.15])
 ##print data from reference lines
-col1, col2, col3, col4, col5, col6 = st.columns([0.1,0.5,0.05,0.15,0.06, 0.09])
 reference_lines = tidy_for_print(reference_lines)
 idx = pd.IndexSlice
 df = reference_lines[['E','D','Reference line','B','A','Percentage Decrease']].transpose()
@@ -78,7 +78,7 @@ slice_R = idx['Reference line',:]
 slice_B = idx['B',:]
 slice_A = idx['A',:]
 
-st.dataframe(df.style.set_properties(**{'color': '#D81900'}, subset=slice_E).set_properties(**{'color': '#E59B2C'}, subset=slice_D).set_properties(**{'color': '#146EA6'}, subset=slice_R).set_properties(**{'color': '#6EAF04'}, subset=slice_B).set_properties(**{'color':  '#2C7B07'}, subset=slice_A))
+col2.dataframe(df.style.set_properties(**{'color': '#D81900'}, subset=slice_E).set_properties(**{'color': '#E59B2C'}, subset=slice_D).set_properties(**{'color': '#146EA6'}, subset=slice_R).set_properties(**{'color': '#6EAF04'}, subset=slice_B).set_properties(**{'color':  '#2C7B07'}, subset=slice_A))
 
 
 ##white space for locating logo at bottom of table
