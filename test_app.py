@@ -41,7 +41,7 @@ sidebarTitleBottom= '<p style="font-weight: 700; color:#146EA6; font-size: 24px;
 st.sidebar.markdown(sidebarTitleBottom, unsafe_allow_html=True)
 
 input_DWT = st.sidebar.number_input('Vessel Deadweight', value=260000)
-input_AER = st.sidebar.number_input('AER (Average Emissions Ratio)', value=1.5)
+input_AER = st.sidebar.number_input('AER (Annual Efficiency Ratio)', value=1.5)
 
 ##decorative line
 st.sidebar.markdown("<hr>", unsafe_allow_html=True)
